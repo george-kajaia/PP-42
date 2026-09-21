@@ -1,0 +1,8 @@
+name = input("Name: ")
+
+company = input("Company: ")
+
+name = name.strip().title()
+company = company.strip().title()
+
+print(f'Hello {name}, your workspace is {company}.')

@@ -1,0 +1,7 @@
+text = "My favorite thing is Python"
+
+print(text.replace("thing", "language"))
+
+print(text.index("Python"))
+
+print(text[12:])
