@@ -1,7 +1,9 @@
-correct_pin = '1234'
+correct_pin = 1234
 balance = 500.0
 
 entered_pin: str = input("enter the pin: ")
+entered_pin = int(entered_pin)
+
 if entered_pin == correct_pin:
     print("Pin is Correct. Move to the second check")
 
