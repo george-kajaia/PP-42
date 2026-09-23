@@ -1,0 +1,18 @@
+correct_pin = '1234'
+balance = 500.0
+
+entered_pin: str = input("enter the pin: ")
+if entered_pin == correct_pin:
+    print("Pin is Correct. Move to the second check")
+
+    requested_amount: str = input("enter the amount: ")
+    requested_amount = float(requested_amount)
+
+    if requested_amount <= balance:
+        print(f"Initial balance: {balance}")
+        print(f"Requested amount: {requested_amount}")
+        print(f"Final balance: {balance - requested_amount}")
+    else:
+        print("Amount of your balance isn't enough")
+else:
+    print("Incorrect PIN. Access Denied.")

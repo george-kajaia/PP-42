@@ -1,0 +1,21 @@
+cart_total: str = input("enter the cart total: ")
+cart_total = float(cart_total)
+
+is_vip: str = input("enter customer is a vip or not (y/n): ")
+is_vip = is_vip.upper() == 'Y'
+
+is_guest: str = input("enter customer is a guest or not (y/n): ")
+is_guest = is_guest.upper() == 'Y'
+
+promo_code: str = input("enter the promo code: ").strip()
+
+shipping = "Paid Shipping"
+if (cart_total >= 50) or is_vip:
+    shipping = "Free Shipping"
+
+discount = 0
+if promo_code and (not is_guest):
+    discount = 10
+
+print(shipping)
+print(f"your discount is {discount} and you should pay {cart_total * (1.0 - discount / 100.0)}")
