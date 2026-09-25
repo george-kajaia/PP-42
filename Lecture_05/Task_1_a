@@ -1,0 +1,18 @@
+correct_pin = 1234
+retry_count = 3
+
+pin = ""
+
+while retry_count > 0:
+    pin: str = input("Enter the pin: ")
+    pin = int(pin)
+    if pin != correct_pin:
+        retry_count -= 1 
+        print(f'Incorrect PIN. Remainig attampt:{retry_count}')
+        if retry_count == 0:
+            print("Card Blocked!")
+    else:
+        print("access granted")
+        break
+
+

@@ -1,0 +1,13 @@
+N = input("Enter the positive integer: ")
+N = int(N)
+
+while N <= 0:
+    print("Incorrect number")
+    N = input("Enter the positive integer: ")
+    N = int(N)
+
+sum = 0
+for i in range(2, N + 1, 2):
+    sum += i
+
+print(f"The sum of even numbers from 1 to {N} is: {sum}")

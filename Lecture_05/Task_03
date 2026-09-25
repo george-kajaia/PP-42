@@ -1,0 +1,10 @@
+str = input("Enter the text with numbers: ")
+
+corrected_str = ""
+
+for c in str:
+    if c.isdigit():
+        continue
+    corrected_str = corrected_str + c    
+
+print(f"The corrected string is: {corrected_str}")
