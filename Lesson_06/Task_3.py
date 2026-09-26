@@ -5,14 +5,14 @@ locations = [
 ]
 
 for x in locations:
-    city, latitude, longitude = x
+    (city, latitude, longitude) = x
     print(f"City: {city}, Latitude: {latitude}, Longitude: {longitude}")
 
 print()
 
 city_names = []
 for x in locations:
-    city, latitude, longitude = x
+    (city, latitude, longitude) = x
     city_names.append(city)
 print("Cities: ", city_names )
 
