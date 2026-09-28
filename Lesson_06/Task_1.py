@@ -28,10 +28,12 @@ scores.sort()
 print("Sorted (ascending) list")
 print(scores, "\n")
 
-passed_scores = []
-for x in scores:
-    if x >= 60:
-        passed_scores.append(x)
+# passed_scores = []
+# for x in scores:
+#     if x >= 60:
+#         passed_scores.append(x)
+
+passed_scores: list[int] = [x for x in scores if x >= 60]
 
 print("passed scores (>= 60) ")
 print(passed_scores)
