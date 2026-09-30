@@ -1,0 +1,18 @@
+fruits = ["apple", "banana", "cherry", "orange"]
+
+try:
+    index = int(input("Enter the index: "))
+    
+    if index < 0 or index > len(fruits)-1:
+        raise IndexError(f"Index out of bounds! Choose an index between 0 and {len(fruits)-1}.")
+
+    print(f"Selected fruit: {fruits[index]}")
+
+except ValueError as e:
+    print("Invalid input! Please enter a whole number.")
+
+except IndexError as e:
+    print(e)
+    
+else:
+    print("Successfully retrieved item!")
