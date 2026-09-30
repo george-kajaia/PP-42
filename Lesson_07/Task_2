@@ -1,0 +1,10 @@
+password_min_length = 6
+try:
+    password = input("Enter a password: ")     
+    if len(password) < password_min_length:
+        raise ValueError("Password is too short!")
+    print("Password has required length")
+except ValueError as e:
+    print(e)
+except Exception as e:
+    print(f"Something went wrong: {e}")

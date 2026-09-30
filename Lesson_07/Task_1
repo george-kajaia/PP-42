@@ -1,0 +1,10 @@
+current_year = 2026
+try:
+    birth_year = int(input("Enter your birth year: "))     
+    if birth_year > current_year:
+        raise Error("Birth year must be less then 2026")
+    print(f"your age is: {current_year - birth_year}")
+except ValueError:
+    print("Please enter only digits!")
+except Exception as e:
+    print(f"Something went wrong: {e}")
