@@ -9,4 +9,4 @@ print("Word Counts: ", word_counts)
 
 items_more_than_once = [key for key, value in word_counts.items() if value > 1 ]
 
-print("Word Counts: ", items_more_than_once)
+print("words that appear more than once: ", items_more_than_once)
