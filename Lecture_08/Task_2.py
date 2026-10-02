@@ -26,7 +26,6 @@ print("Person: ", person, "\n")
 print("Ann's mail: ", person["contacts"]["mail"], "\n")
 print("Ann's Python's score: ", person["courses"]["Python"]["Score"], "\n")
 
-
 person["courses"]["Web"]["Score"] = 65
 person["courses"]["Web"]["Passed"] = True
 
