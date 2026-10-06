@@ -6,4 +6,4 @@ def sum_of_digits(n):
     else:
         return n % 10 + sum_of_digits(n // 10)
 
-print("Sum of numbers is: ", sum_of_digits(11)) 
+print("Sum of numbers is: ", sum_of_digits(1234))
