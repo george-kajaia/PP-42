@@ -22,10 +22,10 @@
 # empty_dct3 = {}
 # print(empty_dct3)
 
-# scores: dict[str, int] = {
-#     "python": 90,
-#     "JAVA": 92
-#     }
+scores: dict[str, int] = {
+    "python": 90,
+    "JAVA": 92
+    }
 #print(scores)
 
 # scores2 = dict(python=90, JAVA = 92, JavaScript = 95)
@@ -59,10 +59,10 @@
 # language, value = removed_items
 # print(language, value)
 
-# print(scores.keys())
-# print(scores.values())
-# print(scores.items())
-# print(len(scores))
+print(scores.keys())
+print(scores.values())
+print(scores.items())
+print(len(scores))
 
 # for key, value in scores.items():    
 #     print(f"Key={key}, value={value}")
@@ -114,5 +114,5 @@ set2 = {      3, 4, 5, 6, 7}
 # print(set0)
 # print(set1.symmetric_difference(set2))
 
-set1.difference_update(set2)
-print(set1)
+# set1.difference_update(set2)
+# print(set1)
