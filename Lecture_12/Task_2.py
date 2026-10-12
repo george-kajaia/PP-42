@@ -10,7 +10,7 @@ def log_execution(func):
         start_time = time.time()
         result = func(*args)
         end_time = time.time()
-        print(f"Executed in {(end_time - start_time)*1000000} microseconds")
+        print(f"Executed in {(end_time - start_time)*1000000:.2f} microseconds")
         
         return result
     
