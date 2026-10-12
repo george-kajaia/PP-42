@@ -1,23 +1,28 @@
 import time
+from functools import wraps
 
-#---Logger decorator---
 def log_execution(func):
-    def wrapper(*args, **kwargs):
-        print(f"Function '{func.__name__}', {func.__doc__}, is called with arguments: {args} and keyword arguments: {kwargs}")
-        start_time = time.time()
-        result = func(*args, **kwargs)
-        end_time = time.time()
-        print(f"Function '{func.__name__}' returned: {result}")
-        print(f"Running '{func.__name__}' Executed in {(end_time - start_time)*1000000} microseconds")
 
+    @wraps(func)
+    def wrapper(*args):
+
+        print(f"Running the '{func.__name__}' function with arguments: {args} ")        
+        start_time = time.time()
+        result = func(*args)
+        end_time = time.time()
+        print(f"Executed in {(end_time - start_time)*1000000} microseconds")
+        
         return result
     
     return wrapper
 
 @log_execution
-def calculate(a, b, operation):
-    """calculating the operation on a and b"""
+def calculate(a, b):
+    """calculating  a in the b-th power"""
     return a ** b
 
-a = calculate(2, 3, operation = "power")
-print(a)
+a = calculate(2, 3)
+
+print(f"Result of calculation: {a}")
+print(f"function name is: {calculate.__name__}")
+print(f"function docstring is: {calculate.__doc__}")
