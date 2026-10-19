@@ -17,7 +17,7 @@ def filter_data(data):
     return survived
 
 def write_data(data):
-    with open("ZZZ_survived.csv", "w", newline="") as file:
+    with open("survived.csv", "w", newline="") as file:
         write = csv.writer(file)   
         write.writerows(data)
 
