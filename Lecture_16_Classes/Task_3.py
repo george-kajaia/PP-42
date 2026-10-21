@@ -14,5 +14,6 @@ class Product:
             print(f"{quantity} {self.name}s are sold, remained {self.stock}")
         
 leptops = Product("Leptop", 1500, 15)
+print(f"{leptops.name}s in stock: {leptops.stock}")
 leptops.sell(7)
 leptops.sell(2)
