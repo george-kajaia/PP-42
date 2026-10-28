@@ -72,30 +72,30 @@
 
 from functools import reduce
 
-# lst = [1, 2, 3, 4, 5, 6, 7, 8]
-# sum_of_nums = reduce(lambda acc, num: acc + num, lst)
-# print(sum_of_nums)
+lst = [1, 2, 3, 4, 5, 6, 7, 8]
+sum_of_nums = reduce(lambda acc, num: acc + num, lst)
+print(sum_of_nums)
 
-# def add(acc, num):
-#     return acc + num
+def add(acc, num):
+    return acc + num
 
-# lst = ["1", "2", "3", "4", "a"]
+lst = ["1", "2", "3", "4", "a"]
 
-# sum_of_nums = reduce(add, lst)
+sum_of_nums = reduce(add, lst)
 
-# print(sum_of_nums)
-
-
-student_names = ["John", "Anna", "Bob"]
-student_scores = [85, 90, 75, 77, 91]
-
-student_info = list(zip(student_names, student_scores))
-print(student_info)
+print(sum_of_nums)
 
 
-student_names = ["John", "Anna", "Bob", "Alice"]
-student_scores = [85, 90, 75, 77, 91]
-cities = ["Tbilisi", "Batumi", "Kutaisi", "Rustavi"]
+# student_names = ["John", "Anna", "Bob"]
+# student_scores = [85, 90, 75, 77, 91]
 
-student_infos = list(zip(student_names, student_scores, cities))
-print(student_infos)
+# student_info = list(zip(student_names, student_scores))
+# print(student_info)
+
+
+# student_names = ["John", "Anna", "Bob", "Alice"]
+# student_scores = [85, 90, 75, 77, 91]
+# cities = ["Tbilisi", "Batumi", "Kutaisi", "Rustavi"]
+
+# student_infos = list(zip(student_names, student_scores, cities))
+# print(student_infos)
