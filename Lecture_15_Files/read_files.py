@@ -18,11 +18,14 @@
 
 
 
-file = open("test.txt", "r" )
-try:
-    lines = file.readlines()    
-    for x in lines:
-        print(x.strip())
-finally:
-    file.close()
+# file = open("test.txt", "r" )
+# try:
+#     lines = file.readlines()    
+#     for x in lines:
+#         print(x.strip())
+# finally:
+#     file.close()
 
+with open("test.txt", "r" ) as f:
+    for line in f:
+        print(line.rstrip("\n"))
