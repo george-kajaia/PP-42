@@ -12,11 +12,8 @@ p2 = Product("Second Product", 20, True)
 p3 = Product("Third Product", 30, True)
 
 p1_dict = asdict(p1)
-print(p1_dict)
 p2_dict = asdict(p2)
-print(p2_dict)
 p3_dict = asdict(p3)
-print(p3_dict)
 
 print("\n")
 
