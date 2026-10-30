@@ -183,46 +183,50 @@
 # print(d3)
 
 
-# class Employee:
-#     company = "Microsoft"
+class Employee:
+    company = "Microsoft"
 
-#     def __init__(self, name):
-#         self.name = name
+    def __init__(self, name):
+        self.name = name
 
-#     @classmethod
-#     def get_company(cls):
-#         return cls.company
+    @classmethod
+    def get_company(cls):
+        return cls.company
     
-# print(Employee.get_company())  # Microsoft
+print(Employee.get_company())  # Microsoft
 
-# emp = Employee("George")
-# print(emp.get_company())        # Microsoft
+emp = Employee("George")
+print(emp.get_company())
+print(Employee.get_company())
 
 
 
 #---Static Methods------------------------------------------------
 
-class MathUtils:
-    @staticmethod
-    def add(a, b):
-        return a + b
+# class MathUtils:
+#     @staticmethod
+#     def add(a, b):
+#         return a + b
     
-    @staticmethod
-    def is_even(n):
-        return n % 2 == 0
+#     @staticmethod
+#     def is_even(n):
+#         return n % 2 == 0
 
-    @staticmethod
-    def factorial(n):
-        if n == 0:
-            return 1
-        return n * MathUtils.factorial(n - 1)
+#     @staticmethod
+#     def factorial(n):
+#         if n == 0:
+#             return 1
+#         return n * MathUtils.factorial(n - 1)
     
-    @staticmethod
-    def clamp(value, min_val, max_val):
-        return max(min_val, min(value, max_val))
+#     @staticmethod
+#     def clamp(value, min_val, max_val):
+#         return max(min_val, min(value, max_val))
     
-# No object needed — call on the class directly
-print(MathUtils.add(3, 7)) # 10
-print(MathUtils.is_even(4)) # True
-print(MathUtils.factorial(5)) # 120
-print(MathUtils.clamp(150,0,100)) # 100
+# # No object needed — call on the class directly
+# print(MathUtils.add(3, 7)) # 10
+# print(MathUtils.is_even(4)) # True
+# print(MathUtils.factorial(5)) # 120
+# print(MathUtils.clamp(150,0,100)) # 100
+
+# mt = MathUtils()
+# print(mt.add(3, 7))
