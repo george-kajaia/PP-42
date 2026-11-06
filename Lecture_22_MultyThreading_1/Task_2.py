@@ -18,13 +18,11 @@ threads = []
 
 start_time = time.time()
 
-# Create and start 100 threads
 for i in range(1, 101):
     thread = threading.Thread(target=get_post, args=(i,))
     threads.append(thread)
     thread.start()
 
-# Wait for all threads to finish
 for thread in threads:
     thread.join()
 

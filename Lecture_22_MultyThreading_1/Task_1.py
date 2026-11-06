@@ -1,51 +1,70 @@
-import multiprocessing
+from multiprocessing import Pool
+import sys
 import time
-import math
 
-def calc_factorial(number1, number2):
-    for i in range(number1, number2 + 1):
+def calc_factorial(start_number, end_number):
+    result = 1    
+    for i in range(start_number, end_number + 1):
         result *= i
-
     return result
 
 
-number = 100_000
-start_time = time.time()
-result = calc_factorial(1, number)
-single_time = time.time() - start_time
-print(f"Single-process time: {single_time:.4f} seconds")
+if __name__ == "__main__":
+    sys.set_int_max_str_digits(100_000)
 
-workers = 10
+    number = 1000
+    worker_number = 10
 
-chunk_size = number // workers
+    # ვყოფ რიცხვს ნაწილებად დაახლოებით თანაბრად.
+    # ნაწილების რაოდენობას განსაზღვრავს worker_number ცვლადი. 
+    # თითოეული ნაწილი შედგება start_number და end_number-სგან და ინახება arguments სიაში.
+    # მაგ.: Number = 10, worker_number = 3. arguments = [[1, 4], [5, 8], [9, 10]].
+    # ყველა ელემენტში არის თანაბარი რიცხვები გარდა ბოლო ელემენტისა, რომელიც შეიძლება შეიცავდეს ნაკლებ რიცხვს.
+    # calc_factorial(start_number, end_number)-ს გადაეცემა ერთი რომელიმე ნაწილი. 
+    # მიმდევრობითი დათვლის დროს ციკლში იძახება calc_factorial(start_number, end_number) და 
+    # გადაეცემა arguments ერთი ელემენტი. 
+    # პარალელური დათვლის დროს კი calc_factorial(start_number, end_number) გადაეცემა სხვადასხვა პროცესს 
+    # arguments სიის ერთი ელემენტით.
 
+    chunk_size = number // worker_number
+    if number % worker_number != 0:
+        chunk_size += 1
 
+    arguments = []
+    for i in range(1, worker_number):
+        start = chunk_size * (i - 1) + 1
+        end = start + chunk_size - 1
+        arguments.append([start, end])
 
-    ranges = [
-        (start, min(start + chunk_size - 1, n))
-        for start in range(1, n + 1, chunk_size)
-    ]
-
-    # 1. Single-process
+    if end != number:    
+        arguments.append([end+1, number])
+    
+# Single-process execution-----------------------------------------------------------------------------
     start_time = time.time()
+    result = 1
 
-    parts = [factorial_part(r) for r in ranges]
-    result_single = math.prod(parts)
+    for i in range(worker_number):
+        result = result * calc_factorial(arguments[i][0], arguments[i][1])
 
     single_time = time.time() - start_time
+    
+    print(f"Single-process: Result={result}; time={1000 * single_time:.4f} ms")
 
-    # 2. Multiprocessing
+# Parallel-process execution---------------------------------------------------------------------------
     start_time = time.time()
+    with Pool() as pool:        
+        pool_results = pool.starmap(calc_factorial, arguments)      
 
-    with multiprocessing.Pool(processes=workers) as pool:
-        parts = pool.map(factorial_part, ranges)
+    result = 1
+    for x in pool_results:
+        result *= x
 
-    result_multi = math.prod(parts)
+    parallel_time = time.time() - start_time
+    print(f"Parallel-process: Result={result}; time={1000 * parallel_time:.4f} ms")
 
-    multi_time = time.time() - start_time
+    print(f"Single-process time: {1000 * single_time:.4f}x")
+    print(f"Parallel-process time: {1000 * parallel_time:.4f}x")
 
-    # Compare results
-    print(f"Single-process time: {single_time:.4f} seconds")
-    print(f"Multiprocessing time: {multi_time:.4f} seconds")
-    print(f"Results equal: {result_single == result_multi}")
-    print(f"Speedup: {single_time / multi_time:.2f}x")
+    # ფაქტორიალის დათვლა არც ისე დიდი დატვირთვაა პროცესორისთვის, 
+    # ამიტომ პარალელურად დათვალში დამჭირდა უფრო მეტი დრო: parallel_time > single_time. 
+    # წავაწყდი ე.წ. multiprocessing overhead-ს
