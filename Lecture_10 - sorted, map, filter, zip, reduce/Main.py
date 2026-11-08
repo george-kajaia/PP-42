@@ -42,6 +42,8 @@
 
 # nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
+# x = map(lambda x: x * 2, nums)
+
 # mapped_nums = list(map(lambda x: x * 2, nums))
 # print(mapped_nums)
 
@@ -72,18 +74,18 @@
 
 from functools import reduce
 
-lst = [1, 2, 3, 4, 5, 6, 7, 8]
-sum_of_nums = reduce(lambda acc, num: acc + num, lst)
-print(sum_of_nums)
+# lst = [1, 2, 3, 4, 5, 6, 7, 8]
+# sum_of_nums = reduce(lambda acc, num: acc + num, lst)
+# print(sum_of_nums)
 
-def add(acc, num):
-    return acc + num
+# def add(acc, num):
+#     return acc + num
 
-lst = ["1", "2", "3", "4", "a"]
+# lst = ["1", "2", "3", "4", "a"]
 
-sum_of_nums = reduce(add, lst)
+# sum_of_nums = reduce(add, lst)
 
-print(sum_of_nums)
+# print(sum_of_nums)
 
 
 # student_names = ["John", "Anna", "Bob"]

@@ -2,8 +2,6 @@
 # print(sys.version)
 # print(sys._is_gil_enabled())
 
-
-
 # from concurrent.futures import ProcessPoolExecutor
 
 # def calculate(n):
@@ -11,8 +9,7 @@
 
 # if __name__ == "__main__":
 #     with ProcessPoolExecutor(max_workers=4) as executor:
-#         results = list(
-#             executor.map(calculate, [10_000_000] * 4)
+#         results = list(executor.map(calculate, [10_000_000] * 4)
 #         )
 
 #     print(results)
@@ -60,26 +57,26 @@
 # import example
 # example.get_name()
 
-number = 11
-workers = 10
+# number = 11
+# workers = 10
 
-chunk_size = number // workers
-if number % workers != 0:
-    print("Chunk size is not an integer, increasing chunk size by 1")
-    chunk_size += 1
+# chunk_size = number // workers
+# if number % workers != 0:
+#     print("Chunk size is not an integer, increasing chunk size by 1")
+#     chunk_size += 1
 
-print(chunk_size)
+# print(chunk_size)
 
-arguments = []
-for i in range(1, workers):   
-    start = chunk_size * (i - 1) + 1
-    end = start + chunk_size - 1
-    arguments.append([start, end])
+# arguments = []
+# for i in range(1, workers):   
+#     start = chunk_size * (i - 1) + 1
+#     end = start + chunk_size - 1
+#     arguments.append([start, end])
 
-if end != number:    
-    arguments.append([end+1, number])
+# if end != number:    
+#     arguments.append([end+1, number])
 
-print(arguments)
+# print(arguments)
 
 
 # import os
