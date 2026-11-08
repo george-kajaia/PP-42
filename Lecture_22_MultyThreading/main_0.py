@@ -60,24 +60,26 @@
 # import example
 # example.get_name()
 
-# number = 6
-# workers = 2
+number = 11
+workers = 10
 
-# chunk_size = number // workers
-# if number % workers != 0:
-#     print("Chunk size is not an integer, increasing chunk size by 1")
-#     chunk_size += 1
+chunk_size = number // workers
+if number % workers != 0:
+    print("Chunk size is not an integer, increasing chunk size by 1")
+    chunk_size += 1
 
-# arguments = []
-# for i in range(1, workers):   
-#     start = chunk_size * (i - 1) + 1
-#     end = start + chunk_size - 1
-#     arguments.append([start, end])
+print(chunk_size)
 
-# if end != number:    
-#     arguments.append([end+1, number])
+arguments = []
+for i in range(1, workers):   
+    start = chunk_size * (i - 1) + 1
+    end = start + chunk_size - 1
+    arguments.append([start, end])
 
-# print(arguments)
+if end != number:    
+    arguments.append([end+1, number])
+
+print(arguments)
 
 
 # import os
