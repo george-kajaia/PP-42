@@ -6,14 +6,6 @@ class FileRepository:
     city_data_file = "Project_1/Weather_Dashboard_Module/Data/CityData.json"
     weather_data_file = "Project_1/Weather_Dashboard_Module/Data/WeatherData.json"        
 
-    # ქალაქების სიის გამოტანა-----------------------------------------------------------
-    def get_city(self, city_name):
-        cities = FileRepository.__read_city_file_data()
-        
-        
-    def get_cities(self):
-        cities = FileRepository.__read_city_file_data()
-
     # ქალაქის დამატება------------------------------------------------------------------
     def add_city(self, new_city):
         cities = FileRepository.__read_city_file_data()
@@ -105,61 +97,16 @@ class FileRepository:
             raise ValueError(f"City with name '{name}' not found")
         else:
             return None
-        
-    # # ერთი ქალაქის მიმდინარე ამინდის გაგება---------------------------------------------
-    # def get_city_new_weather(self, name:str, save_data: bool = True):
-    #     city = self.get_city_data_by_name(name)
 
-    #     url = Repository.url.replace("{city_name}", name.strip())        
-    #     response = requests.get(url, timeout=10)
-    #     response.raise_for_status()
-    #     result = response.json()
+    # # ყველა ქალაქის სახელის გამოტანა----------------------------------------------------
+    def get_all_city_names(self):
+        cities = FileRepository.__read_city_file_data()
 
-    #     data = result["results"][0]
-        
-    #     weather = Weather(
-    #         0,
-    #         data.get("name"),
-    #         city.id,
-    #         data.get("latitude"),
-    #         data.get("longitude"),
-    #         data.get("elevation"),
-    #         data.get("feature_code"),
-    #         data.get("country_code"),
-    #         data.get("admin1_id"),
-    #         data.get("admin2_id"),
-    #         data.get("timezone"),
-    #         data.get("population"),
-    #         data.get("country_id"),
-    #         data.get("country"),
-    #         data.get("admin1"),
-    #         data.get("admin2"),
-    #         result.get("generationtime_ms")
-    #     )
+        city_names = []
+        for city in cities:            
+            city_names.append(city.get("name"))
 
-    #     if save_data == True:
-    #         with open(Repository.weather_data_file, "r", encoding="utf-8") as file:
-    #             weathers = json.load(file)
-
-    #         max_id = 0
-    #         for w in weathers:
-    #             if w["id"] > max_id:
-    #                 max_id = w["id"]
-            
-    #         weather.id = max_id + 1
-    #         weathers.append(weather.__dict__)
-
-    #         with open(Repository.weather_data_file, "w", encoding="utf-8") as file:
-    #             json.dump(weathers, file, ensure_ascii=False, indent=4)
-
-    #     return weather
-
-    # რამდენიმე ქალაქის მიმდინარე ამინდის გაგება ასინქრონულად---------------------------
-    # async def get_multiple_city_new_weathers_async(self, names: list):
-    #     async with aiohttp.ClientSession() as session:
-    #         tasks = [self.get_city_new_weather(name, False) for name in names]
-    #         #return await asyncio.gather(*tasks)
-        
+        return city_names
 
     # ერთი ქალაქის ამინდის ისტორიის გაგება----------------------------------------------
     def get_city_weather_history(self, name):
@@ -175,7 +122,7 @@ class FileRepository:
 
         return result
 
-    # ფაილში ჩაწერის დამხმარე მეთოდი
+    # ქალაქების ფაილიდან წაკითხვის დამხმარე მეთოდი
     @staticmethod
     def __read_city_file_data():
         with open(FileRepository.city_data_file, "r", encoding="utf-8") as file:
@@ -188,6 +135,7 @@ class FileRepository:
 
         return cities
 
+    # ამინდების ფაილიდან წაკითხვის დამხმარე მეთოდი
     @staticmethod
     def __read_weather_file_data():
         with open(FileRepository.weather_data_file, "r", encoding="utf-8") as file:

@@ -36,10 +36,11 @@ class Service:
         print("1. ახალი ამინდის მიღება")
         print("2. რამდენიმე ქალაქის ამინდის პარალელურად (ასინქრონულად) მიღება")
         print("3. ამინდის ისტორიის გამოტანა")
-        print("4. ქალაქის დამატება")
-        print("5. ქალაქის შეცვლა")
-        print("6. ქალაქის წაშლა")
-        print("7. გამოსვლა(exit)")
+        print("4. ქალაქების სია")
+        print("5. ქალაქის დამატება")
+        print("6. ქალაქის შეცვლა")
+        print("7. ქალაქის წაშლა")
+        print("8. გამოსვლა(exit)")
 		
     @staticmethod
     def read_option():
@@ -64,20 +65,30 @@ class Service:
         elif n == 3: #ამინდის ისტორიის გამოტანა
             Service.get_city_weather_history()
 
-        elif n == 4: #ქალაქის დამატება            
+        elif n == 4: #ქალაქების სია            
+            Service.get_all_city_names()
+
+        elif n == 5: #ქალაქის დამატება            
             Service.add_city()
 
-        elif n == 5: #ქალაქის შეცვლა
+        elif n == 6: #ქალაქის შეცვლა
             Service.edit_city()
 
-        elif n == 6:  #ქალაქის წაშლა
+        elif n == 7:  #ქალაქის წაშლა
             Service.delete_city()
 
-        elif n == 7: #Exit
+        elif n == 8: #Exit
             sys.exit()
         else:
             raise ValueError("Unknown option")
-            
+
+    @staticmethod
+    def get_all_city_names():
+        city_names = Service.file_repository.get_all_city_names()
+        print("\n Stored cities:")
+        for name in city_names:
+            print("    ", name)
+
     @staticmethod
     def add_city():
             city_name = input("Enter the city name: ")
