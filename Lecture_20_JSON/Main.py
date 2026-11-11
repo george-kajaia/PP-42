@@ -1,14 +1,16 @@
-# from dataclasses import dataclass
+from dataclasses import dataclass
 
-# @dataclass
-# class Employee:
-#     name: str
-#     salary: float = 1000
+@dataclass
+class Employee:
+    name: str
+    salary: float = 1000
 
-# emp = Employee("giorgi, 333")
+emp = Employee("giorgi, 333")
 
-# for x in emp.__dict__:
-#     print(x)
+print(emp.__dict__)
+
+for x in emp.__dict__:
+    print(x)
 
 # print("\n")
 
@@ -17,15 +19,15 @@
 
 # print(Employee.salary)
 
-import json
+# import json
 
-data = {"name": "Alice", "age": 30}
+# data = {"name": "Alice", "age": 30}
 
-text = json.dumps(data)
-print(text) 
+# text = json.dumps(data)
+# print(text) 
 
-print("\n")
+# print("\n")
 
-ext = '{"name": "Alice", "age": 30}'
-data = json.loads(text)
-print(data["name"]) 
+# ext = '{"name": "Alice", "age": 30}'
+# data = json.loads(text)
+# print(data["name"]) 
