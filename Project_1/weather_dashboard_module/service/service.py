@@ -1,26 +1,35 @@
 from repository.repository import Repository
 from entities.entities import City
-
 import sys
+import os
 
 class Service:
     repository = Repository()
-    
+
+    @staticmethod
+    def init_files():
+        for path in [Repository.city_data_file, Repository.weather_data_file]:
+            if not os.path.exists(path):            
+                with open(path, "w", encoding="utf-8") as file:
+                    file.write("[]")
+
+
     @staticmethod
     def run_module():
         while True:
-            try:
-                Service.display_start_page()
+            #try:
+            Service.display_start_page()
 
-                n = Service.read_option()
-                Service.dispatch_message(n)
-            except Exception as e:
-                print(e)
-            finally:
-                print("-----------------------------------------") 
+            n = Service.read_option()
+            Service.dispatch_message(n)
+            #except Exception as e:
+                #print(e)
+            #finally:
+            print("-----------------------------------------") 
             
     @staticmethod
     def display_start_page():
+        print()
         print("1. ახალი ამინდის მიღება")
         print("2. რამდენიმე ქალაქის ამინდის პარალელურად (ასინქრონულად) მიღება")
         print("3. ამინდის ისტორიის გამოტანა")
@@ -31,7 +40,7 @@ class Service:
 		
     @staticmethod
     def read_option():
-        n = input("Choose option: ")
+        n = input("\nChoose option: ")
         if not n.isdigit():
             raise ValueError("Choose only digits")
         
@@ -89,6 +98,8 @@ class Service:
             city = City(0, name, country, latitude, longitude)
 
             Service.repository.add_city(city)
+
+            print(f"\n City with the name '{city.name}' has added\n")
 		
     @staticmethod
     def edit_city():
@@ -101,7 +112,7 @@ class Service:
 		
         new_country = input("Enter the new country name: ")
         if new_country == "":
-            new_name = city.country
+            new_country = city.country
 
         new_latitude = input("Enter the new latitude: ")
         if new_latitude == "":
@@ -120,7 +131,7 @@ class Service:
         elif not new_longitude.isnumeric():
             raise ValueError("The new longitude must be a number") 
 			
-        new_longitude = float(new_latitude)
+        new_longitude = float(new_longitude)
         if new_longitude < 0:
             raise ValueError("The new longitude must be greater then zero") 
 
@@ -128,35 +139,55 @@ class Service:
         
         Service.repository.edit_city(city.id, new_city)
 
+        print(f"\n City with the name '{city.name}' has changed\n")
+
     @staticmethod
     def delete_city():
         name = input("Enter the city name: ")
         city = Service.repository.get_city_data_by_name(name)
         Service.repository.delete_city(city.id)
+        print(f"\n City with the name '{city.name}' has deleted\n")
 		
     @staticmethod
     def get_city_new_weather():
         name = input("Enter the city name: ")
         weather = Service.repository.get_city_new_weather(name)
 
-        print(f"Current weather for the city: {name}")
-        print(f"    observed_at: {weather.observed_at}")
+        print(f"\nCurrent weather for the city: {name}")
+        print(f"    latitude: {weather.latitude}")
+        print(f"    longitude: {weather.longitude}")
+        print(f"    elevation: {weather.elevation}")
+        print(f"    feature_code: {weather.feature_code}")
+        print(f"    country_code: {weather.country_code}")
+        print(f"    admin1_id: {weather.admin1_id}")
+        print(f"    admin2_id: {weather.admin2_id}")
         print(f"    timezone: {weather.timezone}")
-        print(f"    temperature: {weather.temperature}")
-        print(f"    wind_speed: {weather.wind_speed}")
-        print(f"    weather_code: {weather.weather_code}")
-		
+        print(f"    population: {weather.population}")
+        print(f"    country_id: {weather.country_id}")
+        print(f"    country: {weather.country}")
+        print(f"    admin1: {weather.admin1}")
+        print(f"    admin2: {weather.admin2}")
+        print(f"    generationtime_ms: {weather.generationtime_ms}")
+
     @staticmethod
     def get_city_weather_history():
         name = input("Enter the city name: ")
         weather_list = Service.repository.get_city_weather_history(name)
 
-        for w in weather_list:            
-            print("City's weather data:")
-            print(f"    City's Id: {w["city_id"]}")
-            print(f"    observed_at: {w["observed_at"]}")
-            print(f"    timezone: {w["timezone"]}")
-            print(f"    temperature: {w["temperature"]}")
-            print(f"    wind_speed: {w["wind_speed"]}")
-            print(f"    weather_code: {w["weather_code"]}")
-        
+        print(f"\n{name}'s weather data:")
+        for weather in weather_list:            
+            print(f"\n    weather data id={weather.get("id")}:")
+            print(f"        latitude: {weather.get("latitude")}")
+            print(f"        longitude: {weather.get("longitude")}")
+            print(f"        elevation: {weather.get("elevation")}")
+            print(f"        feature_code: {weather.get("feature_code")}")
+            print(f"        country_code: {weather.get("country_code")}")
+            print(f"        admin1_id: {weather.get("admin1_id")}")
+            print(f"        admin2_id: {weather.get("admin2_id")}")
+            print(f"        timezone: {weather.get("timezone")}")
+            print(f"        population: {weather.get("population")}")
+            print(f"        country_id: {weather.get("country_id")}")
+            print(f"        country: {weather.get("country")}")
+            print(f"        admin1: {weather.get("admin1")}")
+            print(f"        admin2: {weather.get("admin2")}")
+            print(f"        generationtime_ms: {weather.get("generationtime_ms")}")        
