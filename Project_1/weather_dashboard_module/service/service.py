@@ -1,31 +1,34 @@
-from repository.repository import Repository
-from entities.entities import City
+from repository.file_repository import FileRepository
+from repository.api_repository import ApiRepository
+from entities.city import City
+from entities.weather import Weather
 import sys
 import os
+import asyncio
 
 class Service:
-    repository = Repository()
+    file_repository = FileRepository()
+    api_repository = ApiRepository()
 
     @staticmethod
     def init_files():
-        for path in [Repository.city_data_file, Repository.weather_data_file]:
+        for path in [FileRepository.city_data_file, FileRepository.weather_data_file]:
             if not os.path.exists(path):            
                 with open(path, "w", encoding="utf-8") as file:
                     file.write("[]")
 
-
     @staticmethod
     def run_module():
         while True:
-            #try:
-            Service.display_start_page()
+            try:
+                Service.display_start_page()
 
-            n = Service.read_option()
-            Service.dispatch_message(n)
-            #except Exception as e:
-                #print(e)
-            #finally:
-            print("-----------------------------------------") 
+                n = Service.read_option()
+                Service.dispatch_message(n)
+            except Exception as e:
+                print(e)
+            finally:
+                print("-----------------------------------------") 
             
     @staticmethod
     def display_start_page():
@@ -77,75 +80,38 @@ class Service:
             
     @staticmethod
     def add_city():
-            name = input("Enter the city name: ")
+            city_name = input("Enter the city name: ")
 
-            country = input("Enter the country name: ")
+            city = Service.file_repository.get_city_data_by_name(city_name, raise_error = False)
+            if city != None:
+                raise Exception(f"City with the name '{city_name}' already exists")
 
-            latitude = input("Enter the latitude: ")
-            if not latitude.isnumeric():
-                raise ValueError("latitude must be a number") 
-            latitude = float(latitude)
-            if latitude < 0:
-                raise ValueError("latitude must be greater then zero") 
-            
-            longitude = input("Enter the longitude: ")
-            if not longitude.isnumeric():
-                raise ValueError("longitude must be a number") 
-            longitude = float(latitude)
-            if longitude < 0:
-                raise ValueError("longitude must be greater then zero") 
+            new_city = Service.api_repository.get_city_data(city_name)
 
-            city = City(0, name, country, latitude, longitude)
+            Service.file_repository.add_city(new_city)
 
-            Service.repository.add_city(city)
-
-            print(f"\n City with the name '{city.name}' has added\n")
+            print(f"\n City with the name '{new_city.name}' has added\n")
 		
     @staticmethod
     def edit_city():
-        name = input("Enter the city name: ")
-        city = Service.repository.get_city_data_by_name(name)
-               
-        new_name = input("Enter the new city name: ")
-        if new_name == "":
-            new_name = city.name
-		
-        new_country = input("Enter the new country name: ")
-        if new_country == "":
-            new_country = city.country
+        city_name = input("Enter the city name: ")
 
-        new_latitude = input("Enter the new latitude: ")
-        if new_latitude == "":
-            new_latitude = city.latitude
-        elif not new_latitude.isnumeric():
-            raise ValueError("The new latitude must be a number") 
-        
-        new_latitude = float(new_latitude)
+        city = Service.file_repository.get_city_data_by_name(city_name, raise_error = True)
+        if city == None:
+            raise Exception(f"City with the name '{city_name}' already exists")
 
-        if new_latitude < 0:
-            raise ValueError("The new latitude must be greater then zero") 
-            
-        new_longitude = input("Enter the new longitude: ")
-        if new_longitude == "":
-            new_longitude = city.longitude
-        elif not new_longitude.isnumeric():
-            raise ValueError("The new longitude must be a number") 
-			
-        new_longitude = float(new_longitude)
-        if new_longitude < 0:
-            raise ValueError("The new longitude must be greater then zero") 
-
-        new_city = City(city.id, new_name, new_country, new_latitude, new_longitude)
-        
-        Service.repository.edit_city(city.id, new_city)
+        id = city.id
+        new_city = Service.api_repository.get_city_data(city_name)
+                
+        Service.file_repository.edit_city(id, new_city)
 
         print(f"\n City with the name '{city.name}' has changed\n")
 
     @staticmethod
     def delete_city():
         name = input("Enter the city name: ")
-        city = Service.repository.get_city_data_by_name(name)
-        Service.repository.delete_city(city.id)
+        city = Service.file_repository.get_city_data_by_name(name)
+        Service.file_repository.delete_city(city.id)
         print(f"\n City with the name '{city.name}' has deleted\n")
 		
     @staticmethod
@@ -168,6 +134,14 @@ class Service:
         print(f"    admin1: {weather.admin1}")
         print(f"    admin2: {weather.admin2}")
         print(f"    generationtime_ms: {weather.generationtime_ms}")
+
+    @staticmethod
+    def get_multiple_city_new_weathers():        
+        if __name__ == "service.service":            
+            names = []
+            weather = asyncio.run(Service.repository.get_multiple_city_new_weathers_async(names))
+
+
 
     @staticmethod
     def get_city_weather_history():
