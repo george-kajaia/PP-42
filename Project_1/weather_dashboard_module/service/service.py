@@ -108,7 +108,7 @@ class Service:
 
         city = Service.file_repository.get_city_data_by_name(city_name, raise_error = True)
         if city == None:
-            raise Exception(f"City with the name '{city_name}' already exists")
+            raise Exception(f"City with the name '{city_name}' does not exists")
 
         id = city.id
         new_city = Service.api_repository.get_city_data(city_name)
@@ -122,8 +122,10 @@ class Service:
         name = input("Enter the city name: ")
         city = Service.file_repository.get_city_data_by_name(name)
         Service.file_repository.delete_city(city.id)
-        print(f"City with the name '{city.name}' has deleted\n")
+        
         Service.file_repository.delete_city_weather(city.id)
+
+        print(f"City with the name '{city.name}' has deleted\n")
 		
     @staticmethod
     def get_city_weather():
