@@ -4,12 +4,13 @@ import requests
 from entities.city import City
 from entities.weather import Weather
 
-class ApiRepository:
+class WeatherApi:
     city_url = "https://geocoding-api.open-meteo.com/v1/search?name={city_name}&count=1&language=ka"
     whether_url = "https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,wind_speed_10m,weather_code"
 
+    # ერთი ქალაქის მონაცემების  გაგება ---------------------------------------------
     def get_city_data(self, city_name):
-        url = ApiRepository.city_url.replace("{city_name}", city_name.strip())
+        url = WeatherApi.city_url.replace("{city_name}", city_name.strip())
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         result = response.json()
@@ -34,9 +35,9 @@ class ApiRepository:
             data.get("generationtime_ms")
         )        
 
-    # ერთი ქალაქის მიმდინარე ამინდის გაგება---------------------------------------------
+    # ერთი ქალაქის მიმდინარე ამინდის გაგება ---------------------------------------
     def get_city_whether(self, city: City):
-        url = ApiRepository.whether_url.replace("{latitude}", str(city.latitude)).replace("{longitude}", str(city.longitude))
+        url = WeatherApi.whether_url.replace("{latitude}", str(city.latitude)).replace("{longitude}", str(city.longitude))
 
         response = requests.get(url, timeout=10)
         response.raise_for_status()
@@ -49,14 +50,15 @@ class ApiRepository:
         
         return weather
 
-    #რამდენიმე ქალაქის მიმდინარე ამინდის გაგება ასინქრონულად---------------------------
-    async def get_multiple_city_weathers(self, cities: list[City]):
+    # რამდენიმე ქალაქის მიმდინარე ამინდის გაგება ასინქრონულად --------------------
+    async def get_multiple_city_weathers_async(self, cities: list[City]):
         async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=10)) as session:
-            tasks = [self.__fetch_city_weather(session, city) for city in cities]
+            tasks = [self.__fetch_city_weather_async(session, city) for city in cities]
             return await asyncio.gather(*tasks, return_exceptions=True)
 
-    async def __fetch_city_weather(self, session: aiohttp.ClientSession, city: City):
-        url = ApiRepository.whether_url.replace("{latitude}", str(city.latitude)).replace("{longitude}", str(city.longitude))
+    # ამინდის გაგების ასინქრონული მეთოდი ----------------------------------------
+    async def __fetch_city_weather_async(self, session: aiohttp.ClientSession, city: City):
+        url = WeatherApi.whether_url.replace("{latitude}", str(city.latitude)).replace("{longitude}", str(city.longitude))
 
         async with session.get(url) as response:
             response.raise_for_status()

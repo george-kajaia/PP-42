@@ -1,5 +1,7 @@
 from repository.file_repository import FileRepository
-from repository.api_repository import ApiRepository
+from Infrastructure.weather_api import WeatherApi
+from entities.city import City
+from entities.weather import Weather
 import sys
 import os
 import asyncio
@@ -7,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 class Service:
     file_repository = FileRepository()
-    api_repository = ApiRepository()
+    weather_api = WeatherApi()
 
     @staticmethod
     def init_files():
@@ -20,9 +22,9 @@ class Service:
     def run_module():
         while True:
             try:
-                Service.display_start_page()
+                Service.display_main_menu()
 
-                n = Service.read_option()
+                n = Service.read_menu_option()
                 Service.dispatch_message(n)
             except Exception as e:
                 print(e)
@@ -30,7 +32,7 @@ class Service:
                 print("-----------------------------------------") 
             
     @staticmethod
-    def display_start_page():
+    def display_main_menu():
         print()
         print("1. ახალი ამინდის მიღება")
         print("2. რამდენიმე ქალაქის ამინდის პარალელურად (ასინქრონულად) მიღება")
@@ -42,7 +44,7 @@ class Service:
         print("8. გამოსვლა(exit)")
 		
     @staticmethod
-    def read_option():
+    def read_menu_option():
         n = input("\nChoose option: ")
         if not n.isdigit():
             raise ValueError("Choose only digits")
@@ -92,11 +94,11 @@ class Service:
     def add_city():
             city_name = input("Enter the city name: ")
 
-            city = Service.file_repository.get_city_data_by_name(city_name, raise_error = False)
+            city = Service.file_repository.get_city_data_by_name(city_name)
             if city != None:
                 raise Exception(f"City with the name '{city_name}' already exists")
 
-            new_city = Service.api_repository.get_city_data(city_name)
+            new_city = Service.weather_api.get_city_data(city_name)
 
             Service.file_repository.add_city(new_city)
 
@@ -106,12 +108,12 @@ class Service:
     def edit_city():
         city_name = input("Enter the city name: ")
 
-        city = Service.file_repository.get_city_data_by_name(city_name, raise_error = True)
+        city = Service.file_repository.get_city_data_by_name(city_name)
         if city == None:
             raise Exception(f"City with the name '{city_name}' does not exists")
 
         id = city.id
-        new_city = Service.api_repository.get_city_data(city_name)
+        new_city = Service.weather_api.get_city_data(city_name)
                 
         Service.file_repository.edit_city(id, new_city)
 
@@ -119,8 +121,12 @@ class Service:
 
     @staticmethod
     def delete_city():
-        name = input("Enter the city name: ")
-        city = Service.file_repository.get_city_data_by_name(name)
+        city_name = input("Enter the city name: ")
+
+        city = Service.file_repository.get_city_data_by_name(city_name)
+        if city == None:
+            raise Exception(f"City with the name '{city_name}' does not exists")
+
         Service.file_repository.delete_city(city.id)
         
         Service.file_repository.delete_city_weather(city.id)
@@ -130,13 +136,16 @@ class Service:
     @staticmethod
     def get_city_weather():
         city_name = input("Enter the city name: ")
-        city = Service.file_repository.get_city_data_by_name(city_name, raise_error=True)
+        
+        city = Service.file_repository.get_city_data_by_name(city_name)
+        if city == None:
+            raise Exception(f"City with the name '{city_name}' does not exists")
 
-        weather = Service.api_repository.get_city_whether(city)
+        weather = Service.weather_api.get_city_whether(city)
         
         Service.file_repository.add_city_weather(weather)
 
-        Service.__print_weather(city_name, weather)
+        Service.__print_weather(city_name, [weather])
 
     @staticmethod
     def get_multiple_city_new_weathers():
@@ -145,17 +154,22 @@ class Service:
         if len(names_lat) == 0:
             raise ValueError("Enter the city names!")
 
-        cities = [Service.file_repository.get_city_data_by_name(n_lat, raise_error=True) for n_lat in names_lat]
+        cities: list[City] = []
+        for n_lat in names_lat:
+            city = Service.file_repository.get_city_data_by_name(n_lat)
+            if city is None:
+                raise ValueError(f"City with name '{n_lat}' not found")
+            cities.append(city)
 
-        results = asyncio.run(Service.api_repository.get_multiple_city_weathers(cities))
+        results = asyncio.run(Service.weather_api.get_multiple_city_weathers_async(cities))
 
         for city, result in zip(cities, results):
-            if isinstance(result, Exception):
+            if isinstance(result, BaseException):
                 print(f"\nCould not get weather for '{city.name_lat}': {result}")
                 continue
 
             Service.file_repository.add_city_weather(result)
-            Service.__print_weather(city.name_lat, result)
+            Service.__print_weather(city.name_lat, [result])
 
     @staticmethod
     def get_city_weather_history():
@@ -163,47 +177,29 @@ class Service:
         weather_list = Service.file_repository.get_city_weather_history(name)
 
         print(f"\n{name}'s weather data:")
-        for weather in weather_list:            
-            print(f"\n    weather data id={weather.get("id")}:")
-            print(f"        latitude: {weather.get("latitude")}")
-            print(f"        longitude: {weather.get("longitude")}")
-            print(f"        generationtime_ms: {weather.get("generationtime_ms")}")
-            print(f"        utc_offset_seconds: {weather.get("utc_offset_seconds")}")
-            print(f"        timezone: {weather.get("timezone")}")
-            print(f"        timezone_abbreviation: {weather.get("timezone_abbreviation")}")
-            print(f"        elevation: {weather.get("elevation")}")
+        Service.__print_weather(name, weather_list)
 
-            print(f"        current_units-time: {weather.get("current_units").get("time")}")
-            print(f"        current_units-interval: {weather.get("current_units").get("interval")}")
-            print(f"        current_units-temperature_2m: {weather.get("current_units").get("temperature_2m")}")
-            print(f"        current_units-wind_speed_10m: {weather.get("current_units").get("wind_speed_10m")}")
-            print(f"        current_units-weather_code: {weather.get("current_units").get("weather_code")}")
-
-            print(f"        current-time: {weather.get("current").get("time")}")
-            print(f"        current-interval: {weather.get("current").get("interval")}")
-            print(f"        current-temperature_2m: {weather.get("current").get("temperature_2m")}")
-            print(f"        current-wind_speed_10m: {weather.get("current").get("wind_speed_10m")}")
-            print(f"        current-weather_code: {weather.get("current").get("weather_code")}")
 
     @staticmethod
-    def __print_weather(city_name, weather):
-        print(f"\nCurrent weather for the city: {city_name}")
-        print(f"    latitude: {weather.latitude}")
-        print(f"    longitude: {weather.longitude}")
-        print(f"    generationtime_ms: {weather.generationtime_ms}")
-        print(f"    utc_offset_seconds: {weather.utc_offset_seconds}")
-        print(f"    timezone: {weather.timezone}")
-        print(f"    timezone_abbreviation: {weather.timezone_abbreviation}")
-        print(f"    elevation: {weather.elevation}")
+    def __print_weather(city_name, weathers: list[Weather]):
+        for weather in weathers:        
+            print(f"\nCurrent weather for the city: {city_name}")
+            print(f"    latitude: {weather.latitude}")
+            print(f"    longitude: {weather.longitude}")
+            print(f"    generationtime_ms: {weather.generationtime_ms}")
+            print(f"    utc_offset_seconds: {weather.utc_offset_seconds}")
+            print(f"    timezone: {weather.timezone}")
+            print(f"    timezone_abbreviation: {weather.timezone_abbreviation}")
+            print(f"    elevation: {weather.elevation}")
 
-        print(f"    current_units-time: {weather.current_units.time}")
-        print(f"    current_units-interval: {weather.current_units.interval}")
-        print(f"    current_units-temperature_2m: {weather.current_units.temperature_2m}")
-        print(f"    current_units-wind_speed_10m: {weather.current_units.wind_speed_10m}")
-        print(f"    current_units-weather_code: {weather.current_units.weather_code}")
+            print(f"    current_units-time: {weather.current_units.time}")
+            print(f"    current_units-interval: {weather.current_units.interval}")
+            print(f"    current_units-temperature_2m: {weather.current_units.temperature_2m}")
+            print(f"    current_units-wind_speed_10m: {weather.current_units.wind_speed_10m}")
+            print(f"    current_units-weather_code: {weather.current_units.weather_code}")
         
-        print(f"    current-time: {weather.current.time}")
-        print(f"    current-interval: {weather.current.interval}")
-        print(f"    current-temperature_2m: {weather.current.temperature_2m}")
-        print(f"    current-wind_speed_10m: {weather.current.wind_speed_10m}")
-        print(f"    current-weather_code: {weather.current.weather_code}")
+            print(f"    current-time: {weather.current.time}")
+            print(f"    current-interval: {weather.current.interval}")
+            print(f"    current-temperature_2m: {weather.current.temperature_2m}")
+            print(f"    current-wind_speed_10m: {weather.current.wind_speed_10m}")
+            print(f"    current-weather_code: {weather.current.weather_code}")

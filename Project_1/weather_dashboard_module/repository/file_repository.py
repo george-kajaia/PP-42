@@ -1,4 +1,5 @@
 from entities.city import City
+from entities.weather import Weather
 import json
 from dataclasses import asdict
 
@@ -61,7 +62,7 @@ class FileRepository:
             json.dump(cities, file, ensure_ascii=False, indent=4)
 
     # # ქალაქის მონაცემების მიღება სახელით------------------------------------------------
-    def get_city_data_by_name(self, name_lat, raise_error = True):
+    def get_city_data_by_name(self, name_lat):
         cities = FileRepository.__read_city_file_data()
 
         for c in cities:
@@ -84,10 +85,7 @@ class FileRepository:
                     c.get("generationtime_ms")
                 )
 
-        if raise_error:
-            raise ValueError(f"City with name '{name_lat}' not found")
-        else:
-            return None
+        return None
 
     # # ყველა ქალაქის სახელის გამოტანა----------------------------------------------------
     def get_all_city_names(self):
@@ -100,23 +98,24 @@ class FileRepository:
         return city_names
 
     # ერთი ქალაქის ამინდის ისტორიის გაგება----------------------------------------------
-    def get_city_weather_history(self, name_lat):
-        city = self.get_city_data_by_name(name_lat, raise_error = True)
+    def get_city_weather_history(self, name_lat) -> list[Weather]:
+        city = self.get_city_data_by_name(name_lat)
+        if city is None:
+            raise Exception(f"City with the name '{name_lat}' does not exist")
 
-        with open(FileRepository.weather_data_file, "r", encoding="utf-8") as file:
-            weathers = json.load(file)
+        weathers = FileRepository.__read_weather_file_data()
 
-        result = []
+        result: list[Weather] = []
         for w in weathers:
             if w["city_id"] == city.id:
-                result.append(w)
+                result.append(Weather(**w))
 
         return result
 
     # ერთი ქალაქის ამინდის ჩაწერა ფაილში------------------------------------------------
     def add_city_weather(self, new_weather):        
         weathers = FileRepository.__read_weather_file_data()
-        
+
         #მაქს id-ის გამოთვლა
         max_id = 0
         for c in weathers:
