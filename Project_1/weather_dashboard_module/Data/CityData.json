@@ -1,6 +1,6 @@
 [
     {
-        "id": 3,
+        "id": 2,
         "name": "რუსთავი",
         "name_lat": "rustavi",
         "latitude": 41.56271,
@@ -14,6 +14,23 @@
         "country_id": 614540,
         "country": "საქართველო",
         "admin1": "ქვემო ქართლის მხარე",
+        "generationtime_ms": null
+    },
+    {
+        "id": 4,
+        "name": "Senak’i",
+        "name_lat": "senaki",
+        "latitude": 42.27077,
+        "longitude": 42.06334,
+        "elevation": 45.0,
+        "feature_code": "PPLA2",
+        "country_code": "GE",
+        "admin1_id": 865543,
+        "timezone": "Asia/Tbilisi",
+        "population": 14991,
+        "country_id": 614540,
+        "country": "საქართველო",
+        "admin1": "სამეგრელო-ზემო სვანეთი",
         "generationtime_ms": null
     }
 ]

@@ -2,6 +2,7 @@ from repository.file_repository import FileRepository
 from repository.api_repository import ApiRepository
 import sys
 import os
+import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
 class Service:
@@ -18,15 +19,15 @@ class Service:
     @staticmethod
     def run_module():
         while True:
-            #try:
-            Service.display_start_page()
+            try:
+                Service.display_start_page()
 
-            n = Service.read_option()
-            Service.dispatch_message(n)
-            #except Exception as e:
-                #print(e)
-            #finally:
-                #print("-----------------------------------------") 
+                n = Service.read_option()
+                Service.dispatch_message(n)
+            except Exception as e:
+                print(e)
+            finally:
+                print("-----------------------------------------") 
             
     @staticmethod
     def display_start_page():
@@ -55,10 +56,10 @@ class Service:
     @staticmethod
     def dispatch_message(n):
         if n == 1: #ახალი ამინდის მიღება
-            Service.get_city_new_weather()
+            Service.get_city_weather()
             
         elif n == 2: #რამდენიმე ქალაქის ამინდის პარალელურად (ასინქრონულად) მიღება
-            Service.get_city_weather_history()
+            Service.get_multiple_city_new_weathers()
             
         elif n == 3: #ამინდის ისტორიის გამოტანა
             Service.get_city_weather_history()
@@ -125,62 +126,34 @@ class Service:
         Service.file_repository.delete_city_weather(city.id)
 		
     @staticmethod
-    def get_city_new_weather():
+    def get_city_weather():
         city_name = input("Enter the city name: ")
         city = Service.file_repository.get_city_data_by_name(city_name, raise_error=True)
 
         weather = Service.api_repository.get_city_whether(city)
         
         Service.file_repository.add_city_weather(weather)
-        
-        print(f"\nCurrent weather for the city: {city_name}")
-        print(f"    latitude: {weather.latitude}")
-        print(f"    longitude: {weather.longitude}")
-        print(f"    generationtime_ms: {weather.generationtime_ms}")
-        print(f"    utc_offset_seconds: {weather.utc_offset_seconds}")
-        print(f"    timezone: {weather.timezone}")
-        print(f"    timezone_abbreviation: {weather.timezone_abbreviation}")
-        print(f"    elevation: {weather.elevation}")
 
-        print(f"    current_units-time: {weather.current_units.time}")
-        print(f"    current_units-interval: {weather.current_units.interval}")
-        print(f"    current_units-temperature_2m: {weather.current_units.temperature_2m}")
-        print(f"    current_units-wind_speed_10m: {weather.current_units.wind_speed_10m}")
-        print(f"    current_units-weather_code: {weather.current_units.weather_code}")
-        
-        print(f"    current-time: {weather.current.time}")
-        print(f"    current-interval: {weather.current.interval}")
-        print(f"    current-temperature_2m: {weather.current.temperature_2m}")
-        print(f"    current-wind_speed_10m: {weather.current.wind_speed_10m}")
-        print(f"    current-weather_code: {weather.current.weather_code}")
+        Service.__print_weather(city_name, weather)
 
     @staticmethod
     def get_multiple_city_new_weathers():
-        names = []
+        names_lat = input("Enter city names separated by commas: ").split(",")
+        names_lat = [n_lat.strip() for n_lat in names_lat if n_lat.strip() != ""]
+        if len(names_lat) == 0:
+            raise ValueError("Enter the city names!")
 
-        with ThreadPoolExecutor(max_workers=len(names)) as executor:
-            new_weathers = list(executor.map(Service.api_repository.get_city_new_weather, names))
+        cities = [Service.file_repository.get_city_data_by_name(n_lat, raise_error=True) for n_lat in names_lat]
 
-        with open(Repository.weather_data_file, "r", encoding="utf-8") as file:
-            weathers = json.load(file)
+        results = asyncio.run(Service.api_repository.get_multiple_city_weathers(cities))
 
-        # 4. მაქს id-ის გამოთვლა
-        max_id = 0
-        for w in weathers:
-            if w["id"] > max_id:
-                max_id = w["id"]
+        for city, result in zip(cities, results):
+            if isinstance(result, Exception):
+                print(f"\nCould not get weather for '{city.name_lat}': {result}")
+                continue
 
-        for weather in new_weathers:
-            max_id += 1
-            weather.id = max_id
-
-            weathers.append(weather.__dict__)
-
-        # ყველას ერთად შენახვა
-        with open(Repository.weather_data_file, "w", encoding="utf-8") as file:
-            json.dump(weathers, file, ensure_ascii=False, indent=4)
-
-        return new_weathers            
+            Service.file_repository.add_city_weather(result)
+            Service.__print_weather(city.name_lat, result)
 
     @staticmethod
     def get_city_weather_history():
@@ -209,3 +182,26 @@ class Service:
             print(f"        current-temperature_2m: {weather.get("current").get("temperature_2m")}")
             print(f"        current-wind_speed_10m: {weather.get("current").get("wind_speed_10m")}")
             print(f"        current-weather_code: {weather.get("current").get("weather_code")}")
+
+    @staticmethod
+    def __print_weather(city_name, weather):
+        print(f"\nCurrent weather for the city: {city_name}")
+        print(f"    latitude: {weather.latitude}")
+        print(f"    longitude: {weather.longitude}")
+        print(f"    generationtime_ms: {weather.generationtime_ms}")
+        print(f"    utc_offset_seconds: {weather.utc_offset_seconds}")
+        print(f"    timezone: {weather.timezone}")
+        print(f"    timezone_abbreviation: {weather.timezone_abbreviation}")
+        print(f"    elevation: {weather.elevation}")
+
+        print(f"    current_units-time: {weather.current_units.time}")
+        print(f"    current_units-interval: {weather.current_units.interval}")
+        print(f"    current_units-temperature_2m: {weather.current_units.temperature_2m}")
+        print(f"    current_units-wind_speed_10m: {weather.current_units.wind_speed_10m}")
+        print(f"    current_units-weather_code: {weather.current_units.weather_code}")
+        
+        print(f"    current-time: {weather.current.time}")
+        print(f"    current-interval: {weather.current.interval}")
+        print(f"    current-temperature_2m: {weather.current.temperature_2m}")
+        print(f"    current-wind_speed_10m: {weather.current.wind_speed_10m}")
+        print(f"    current-weather_code: {weather.current.weather_code}")
