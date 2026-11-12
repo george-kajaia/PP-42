@@ -5,6 +5,7 @@ from dataclasses import dataclass
 class City:
     id: int
     name: str
+    name_lat: str
     latitude: float
     longitude: float
     elevation: float

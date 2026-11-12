@@ -1,7 +1,8 @@
 [
     {
-        "id": 1,
+        "id": 3,
         "name": "რუსთავი",
+        "name_lat": "rustavi",
         "latitude": 41.56271,
         "longitude": 44.9787,
         "elevation": 345.0,
@@ -13,22 +14,6 @@
         "country_id": 614540,
         "country": "საქართველო",
         "admin1": "ქვემო ქართლის მხარე",
-        "generationtime_ms": null
-    },
-    {
-        "id": 2,
-        "name": "თბილისი",
-        "latitude": 41.69143,
-        "longitude": 44.83412,
-        "elevation": 433.0,
-        "feature_code": "PPLC",
-        "country_code": "GE",
-        "admin1_id": 611716,
-        "timezone": "Asia/Tbilisi",
-        "population": 1049498,
-        "country_id": 614540,
-        "country": "საქართველო",
-        "admin1": "ქალაქი თბილისი",
         "generationtime_ms": null
     }
 ]

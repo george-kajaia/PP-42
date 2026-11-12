@@ -1,5 +1,6 @@
 from entities.city import City
 import json
+from dataclasses import asdict
 
 
 class FileRepository:
@@ -15,8 +16,8 @@ class FileRepository:
         for c in cities:
             if c["id"] > max_id:
                 max_id = c["id"]
-            if c["name"] == new_city.name:
-                raise Exception(f"City with this name '{new_city.name}' already exists")
+            if c["name_lat"] == new_city.name_lat:
+                raise Exception(f"City with this name '{new_city.name_lat}' already exists")
         
         new_city.id = max_id + 1
         cities.append(new_city.__dict__)
@@ -59,26 +60,16 @@ class FileRepository:
         with open(FileRepository.city_data_file, "w", encoding="utf-8") as file:
             json.dump(cities, file, ensure_ascii=False, indent=4)
 
-        # weathers = FileRepository.__read_weather_file_data()
-
-        # found = False
-        # for i in range(len(weathers) - 1, -1, -1):
-        #     if weathers[i]["city_id"] == id:
-        #         weathers.pop(i)
-        #         found = True
-
-        # with open(FileRepository.weather_data_file, "w", encoding="utf-8") as file:
-        #     json.dump(weathers, file, ensure_ascii=False, indent=4)
-
     # # ქალაქის მონაცემების მიღება სახელით------------------------------------------------
-    def get_city_data_by_name(self, name, raise_error = True):
+    def get_city_data_by_name(self, name_lat, raise_error = True):
         cities = FileRepository.__read_city_file_data()
 
         for c in cities:
-            if c["name"].lower() == name.strip().lower():
+            if c["name_lat"].lower() == name_lat.strip().lower():
                 return City(
                     c.get("id"),
                     c.get("name"),
+                    c.get("name_lat"),
                     c.get("latitude"),
                     c.get("longitude"),
                     c.get("elevation"),
@@ -94,7 +85,7 @@ class FileRepository:
                 )
 
         if raise_error:
-            raise ValueError(f"City with name '{name}' not found")
+            raise ValueError(f"City with name '{name_lat}' not found")
         else:
             return None
 
@@ -104,15 +95,15 @@ class FileRepository:
 
         city_names = []
         for city in cities:            
-            city_names.append(city.get("name"))
+            city_names.append(city.get("name") + " - " + city.get("name_lat"))
 
         return city_names
 
     # ერთი ქალაქის ამინდის ისტორიის გაგება----------------------------------------------
-    def get_city_weather_history(self, name):
-        city = self.get_city_data_by_name(name)
+    def get_city_weather_history(self, name_lat):
+        city = self.get_city_data_by_name(name_lat, raise_error = True)
 
-        with open(Repository.weather_data_file, "r", encoding="utf-8") as file:
+        with open(FileRepository.weather_data_file, "r", encoding="utf-8") as file:
             weathers = json.load(file)
 
         result = []
@@ -121,6 +112,33 @@ class FileRepository:
                 result.append(w)
 
         return result
+
+    # ერთი ქალაქის ამინდის ჩაწერა ფაილში------------------------------------------------
+    def add_city_weather(self, new_weather):        
+        weathers = FileRepository.__read_weather_file_data()
+        
+        #მაქს id-ის გამოთვლა
+        max_id = 0
+        for c in weathers:
+            if c["id"] > max_id:
+                max_id = c["id"]
+        
+        new_weather.id = max_id + 1
+        weathers.append(asdict(new_weather))
+
+        with open(FileRepository.weather_data_file, "w", encoding="utf-8") as file:
+            json.dump(weathers, file, ensure_ascii=False, indent=4)
+
+    # ამინდის წაშლა ფაილიდან-----------------------------------------------------------
+    def delete_city_weather(self, id):
+        weathers = FileRepository.__read_weather_file_data()
+
+        for i in range(len(weathers) - 1, -1, -1):
+            if weathers[i]["city_id"] == id:
+                weathers.pop(i)                
+
+        with open(FileRepository.weather_data_file, "w", encoding="utf-8") as file:
+            json.dump(weathers, file, ensure_ascii=False, indent=4)
 
     # ქალაქების ფაილიდან წაკითხვის დამხმარე მეთოდი
     @staticmethod
