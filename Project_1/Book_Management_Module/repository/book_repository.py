@@ -34,10 +34,10 @@ class BookRepository:
         #მაქს id-ის გამოთვლა
         max_id = 0
         for c in books:
+            if c["title"] == new_book.title:
+                raise Exception(f"The book with this title '{new_book.title}' already exists")
             if c["id"] > max_id:
                 max_id = c["id"]
-            if c["name"] == new_book.name:
-                raise Exception(f"Book with this name '{new_book.name}' already exists")
         
         new_book.id = max_id + 1
         books.append(new_book.__dict__)
