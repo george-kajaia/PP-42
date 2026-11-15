@@ -14,59 +14,6 @@ class BookManager:
             with open(BookRepository.book_data_file, "w", encoding="utf-8") as file:
                 file.write("[]")
 
-    # მთავარი მეთოდი--------------------------------------------------
-    @staticmethod
-    def run_module():
-        while True:
-            try:
-                BookManager.display_main_menu()
-
-                n = BookManager.read_menu_option()
-                BookManager.dispatch_message(n)
-            except Exception as e:
-                print(e)
-            finally:
-                print("-----------------------------------------") 
-
-    # ეკრანზე გამოაქვს მენიუ -------------------------------------------
-    @staticmethod
-    def display_main_menu():
-        print()
-        print("1. ახალი წიგნის დამატება სიაში")
-        print("2. ყველა წიგნის სიის ჩვენება")
-        print("3. წიგნის ძებნა მისი სათაურის მიხედვით")
-        print("4. გამოსვლა(exit)")
-
-    # კითხულობს კლიენტის რისი გაკეთება აირჩია ------------------------
-    @staticmethod
-    def read_menu_option():
-        n = input("\nChoose option: ")
-        if not n.isdigit():
-            raise ValueError("Choose only digits")
-        
-        n = int(n)
-        if n < 1 and n > 10:
-            raise ValueError("Option must be between 1 and 10")
-        
-        return n
-
-    # კლიენტის არჩეული მოქმედების შესაბამისი მეთოდის გამოძახება -------
-    @staticmethod
-    def dispatch_message(n):
-        if n == 1: #ახალი წიგნის დამატება სიაში
-            BookManager.add_book()
-           
-        elif n == 2: #ყველა წიგნის სიის ჩვენება
-            BookManager.get_all_books()
-
-        elif n == 3: #წიგნის ძებნა მისი სათაურის მიხედვით
-            BookManager.get_book_by_title()
-
-        elif n == 4: #Exit
-            sys.exit()
-        else:
-            raise ValueError("Unknown option")
-
     # ყველა წიგნის სიის ჩვენება-----------------------------------------
     @staticmethod
     def get_all_books():
@@ -85,7 +32,7 @@ class BookManager:
 
         book = BookManager.book_repository.get_book_by_title(book_title)
         if book == None:
-            raise Exception(f"book with the title '{book_title}' does not exist")
+            raise Exception(f"\nThe book with the title '{book_title}' does not exist")
         
         print("\n Book data:")
         print(f"Title: {book.title}")

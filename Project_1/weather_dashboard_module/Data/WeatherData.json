@@ -1,1 +1,102 @@
-[]
+[
+    {
+        "id": 1,
+        "city_id": 1,
+        "latitude": 42.250637,
+        "longitude": 42.035572,
+        "generationtime_ms": 0.062346458435058594,
+        "utc_offset_seconds": 0,
+        "timezone": "GMT",
+        "timezone_abbreviation": "GMT",
+        "elevation": 40.0,
+        "current_units": {
+            "time": "iso8601",
+            "interval": "seconds",
+            "temperature_2m": "°C",
+            "wind_speed_10m": "km/h",
+            "weather_code": "wmo code"
+        },
+        "current": {
+            "time": "2026-11-15T12:00",
+            "interval": 900,
+            "temperature_2m": 12.8,
+            "wind_speed_10m": 19.7,
+            "weather_code": 3
+        }
+    },
+    {
+        "id": 2,
+        "city_id": 1,
+        "latitude": 42.250637,
+        "longitude": 42.035572,
+        "generationtime_ms": 0.04458427429199219,
+        "utc_offset_seconds": 0,
+        "timezone": "GMT",
+        "timezone_abbreviation": "GMT",
+        "elevation": 40.0,
+        "current_units": {
+            "time": "iso8601",
+            "interval": "seconds",
+            "temperature_2m": "°C",
+            "wind_speed_10m": "km/h",
+            "weather_code": "wmo code"
+        },
+        "current": {
+            "time": "2026-11-15T12:00",
+            "interval": 900,
+            "temperature_2m": 12.8,
+            "wind_speed_10m": 19.7,
+            "weather_code": 3
+        }
+    },
+    {
+        "id": 3,
+        "city_id": 1,
+        "latitude": 42.250637,
+        "longitude": 42.035572,
+        "generationtime_ms": 0.09179115295410156,
+        "utc_offset_seconds": 0,
+        "timezone": "GMT",
+        "timezone_abbreviation": "GMT",
+        "elevation": 40.0,
+        "current_units": {
+            "time": "iso8601",
+            "interval": "seconds",
+            "temperature_2m": "°C",
+            "wind_speed_10m": "km/h",
+            "weather_code": "wmo code"
+        },
+        "current": {
+            "time": "2026-11-15T12:00",
+            "interval": 900,
+            "temperature_2m": 12.8,
+            "wind_speed_10m": 19.7,
+            "weather_code": 3
+        }
+    },
+    {
+        "id": 4,
+        "city_id": 2,
+        "latitude": 41.586445,
+        "longitude": 44.98204,
+        "generationtime_ms": 0.0362396240234375,
+        "utc_offset_seconds": 0,
+        "timezone": "GMT",
+        "timezone_abbreviation": "GMT",
+        "elevation": 344.0,
+        "current_units": {
+            "time": "iso8601",
+            "interval": "seconds",
+            "temperature_2m": "°C",
+            "wind_speed_10m": "km/h",
+            "weather_code": "wmo code"
+        },
+        "current": {
+            "time": "2026-11-15T12:00",
+            "interval": 900,
+            "temperature_2m": 16.2,
+            "wind_speed_10m": 48.9,
+            "weather_code": 2
+        }
+    }
+]

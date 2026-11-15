@@ -1,5 +1,6 @@
 from service.BookManager import BookManager
+from menu.Menu import MenuManager
 
 BookManager.init_file()
 
-BookManager.run_module()
+MenuManager.run_module()
