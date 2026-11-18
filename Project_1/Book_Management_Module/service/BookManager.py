@@ -34,7 +34,7 @@ class BookManager:
         if book == None:
             raise Exception(f"\nThe book with the title '{book_title}' does not exist")
         
-        print("\n Book data:")
+        print("\nBook data:")
         print(f"Title: {book.title}")
         print(f"Authors: {", ".join(book.authors)}")
         print(f"Year: {book.year}")

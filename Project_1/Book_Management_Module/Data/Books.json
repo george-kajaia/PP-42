@@ -1,29 +1,60 @@
 [
     {
-        "id": 1,
-        "title": "ხარება და გოგია",
+        "id": 4,
+        "title": "nacarqeqia",
         "authors": [
-            "დათო",
-            "ჟუჟუნა",
-            "ხარება"
+            "xalxuri"
         ],
-        "year": 2025
+        "year": 1980
     },
     {
-        "id": 2,
-        "title": "გიორგი ქაჯაია",
+        "id": 5,
+        "title": "quantum mechanics",
         "authors": [
-            "ჟუჟუნა",
-            "სერგო"
+            "chilashvili",
+            "vashakidze",
+            "mamasaxlisovi"
         ],
-        "year": 2008
+        "year": 1959
     },
     {
-        "id": 3,
-        "title": "abesalom, abesalom",
+        "id": 6,
+        "title": "didostatis marjvena",
         "authors": [
-            "George"
+            "gamsaxurdia"
         ],
-        "year": 2024
+        "year": 1960
+    },
+    {
+        "id": 7,
+        "title": "dionisos gimili",
+        "authors": [
+            "gamsaxurdia"
+        ],
+        "year": 1930
+    },
+    {
+        "id": 8,
+        "title": "arsena",
+        "authors": [
+            "javakhishvili"
+        ],
+        "year": 1940
+    },
+    {
+        "id": 9,
+        "title": "tetri sakelo",
+        "authors": [
+            "javakhishvili"
+        ],
+        "year": 1941
+    },
+    {
+        "id": 10,
+        "title": "meri",
+        "authors": [
+            "galaktioni"
+        ],
+        "year": 1960
     }
 ]
