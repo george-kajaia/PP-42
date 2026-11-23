@@ -1,5 +1,6 @@
 
 
+
 class AppConfig:
     _instance = None
 

@@ -19,6 +19,7 @@ class TXTParser:
     def parse(self):
         print(f'Parsing TXT file: {self.file_name}')
 
+
 def parse_data(file_name, file_extension):
     file_extensions: dict[str, any] = {
         "csv": CSVParser,

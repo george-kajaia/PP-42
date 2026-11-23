@@ -17,23 +17,6 @@
         "generationtime_ms": null
     },
     {
-        "id": 2,
-        "name": "რუსთავი",
-        "name_lat": "rustavi",
-        "latitude": 41.56271,
-        "longitude": 44.9787,
-        "elevation": 345.0,
-        "feature_code": "PPLA",
-        "country_code": "GE",
-        "admin1_id": 865536,
-        "timezone": "Asia/Tbilisi",
-        "population": 128249,
-        "country_id": 614540,
-        "country": "საქართველო",
-        "admin1": "ქვემო ქართლის მხარე",
-        "generationtime_ms": null
-    },
-    {
         "id": 3,
         "name": "თბილისი",
         "name_lat": "tbilisi",
